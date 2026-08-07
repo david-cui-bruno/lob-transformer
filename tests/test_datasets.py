@@ -4,8 +4,14 @@ import numpy as np
 import pytest
 import torch
 
-from lobt.data import HORIZONS, synthetic_tape, train_val_split
-from lobt.datasets import WindowedLOBDataset, class_weights
+from lobt.data import (
+    HORIZONS,
+    detect_segments,
+    synthetic_tape,
+    train_val_split,
+    train_val_split_segmented,
+)
+from lobt.datasets import MultiStreamLOBDataset, WindowedLOBDataset, class_weights
 
 
 @pytest.fixture(scope="module")
@@ -85,3 +91,65 @@ class TestClassWeights:
     def test_missing_class_raises(self):
         with pytest.raises(ValueError):
             class_weights(np.array([0, 0, 1]))
+
+
+class TestSegments:
+    def _two_stock_stream(self):
+        x1, y1 = synthetic_tape(n=600, seed=2)
+        x2, y2 = synthetic_tape(n=400, seed=3)
+        x2 = x2.copy()
+        x2[:, [0, 2]] *= 3.0  # different price scale, like FI-2010 stocks
+        x = np.concatenate([x1, x2])
+        y = {k: np.concatenate([y1[k], y2[k]]) for k in HORIZONS}
+        return x, y
+
+    def test_detects_boundary(self):
+        x, _ = self._two_stock_stream()
+        segs = detect_segments(x)
+        assert segs == [(0, 600), (600, 1000)]
+
+    def test_segmented_split_stays_within_stocks(self):
+        x, y = self._two_stock_stream()
+        segs = detect_segments(x)
+        tr_xs, tr_ys, va_xs, va_ys = train_val_split_segmented(x, y, segs, val_frac=0.1)
+        assert len(tr_xs) == len(va_xs) == 2
+        # each stock contributes its own tail to val
+        np.testing.assert_allclose(va_xs[0], x[540:600])
+        np.testing.assert_allclose(va_xs[1], x[960:1000])
+
+    def test_multistream_never_crosses_boundary(self):
+        x, y = self._two_stock_stream()
+        segs = detect_segments(x)
+        xs = [x[s:e] for s, e in segs]
+        ys = [{k: v[s:e] for k, v in y.items()} for s, e in segs]
+        ds = MultiStreamLOBDataset(xs, ys, window=100)
+        # total windows = per-segment windows summed, NOT (n - w + 1) of the concat
+        assert len(ds) == (600 - 100 + 1) + (400 - 100 + 1)
+        # the first window of stream 2 starts exactly at the boundary
+        w_first_s2, _ = ds[600 - 100 + 1]
+        np.testing.assert_allclose(w_first_s2.numpy()[0], x[600])
+        # no window mixes both price scales
+        w_last_s1, _ = ds[600 - 100]
+        assert w_last_s1.numpy()[:, 0].max() < x[600:, 0].min()
+
+    def test_short_stream_skipped(self):
+        x, y = self._two_stock_stream()
+        xs = [x[:600], x[600:650]]  # second too short for window=100
+        ys = [
+            {k: v[:600] for k, v in y.items()},
+            {k: v[600:650] for k, v in y.items()},
+        ]
+        ds = MultiStreamLOBDataset(xs, ys, window=100)
+        assert ds.skipped == 1
+        assert len(ds) == 600 - 100 + 1
+
+    def test_all_labels_matches_iteration(self):
+        x, y = self._two_stock_stream()
+        segs = detect_segments(x)
+        xs = [x[s:e] for s, e in segs]
+        ys = [{k: v[s:e] for k, v in y.items()} for s, e in segs]
+        ds = MultiStreamLOBDataset(xs, ys, window=100)
+        labels = ds.all_labels(0)
+        assert len(labels) == len(ds)
+        sampled = np.array([ds[i][1][0].item() for i in range(0, len(ds), 97)])
+        np.testing.assert_array_equal(sampled, labels[::97])

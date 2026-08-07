@@ -20,8 +20,8 @@ import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
 
-from .data import HORIZONS, load_fi2010, train_val_split
-from .datasets import WindowedLOBDataset, class_weights
+from .data import HORIZONS, detect_segments, load_fi2010, train_val_split_segmented
+from .datasets import MultiStreamLOBDataset, class_weights
 from .models import build_model, param_count
 
 N_CLASSES = 3
@@ -102,15 +102,21 @@ def main() -> None:
     dev = device()
 
     trx, tr_y, tex, te_y = load_fi2010(args.data_dir)
-    trx, tr_y, vx, v_y = train_val_split(trx, tr_y, val_frac=0.1)
+    tr_segments = detect_segments(trx)
+    te_segments = detect_segments(tex)
+    tr_xs, tr_ys, va_xs, va_ys = train_val_split_segmented(trx, tr_y, tr_segments, val_frac=0.1)
+    te_xs = [tex[s:e] for s, e in te_segments]
+    te_ys = [{k: v[s:e] for k, v in te_y.items()} for s, e in te_segments]
 
     if args.shuffle_features:
         perm = np.random.default_rng(1234).permutation(trx.shape[1])
-        trx, vx, tex = trx[:, perm], vx[:, perm], tex[:, perm]
+        tr_xs = [x[:, perm] for x in tr_xs]
+        va_xs = [x[:, perm] for x in va_xs]
+        te_xs = [x[:, perm] for x in te_xs]
 
-    ds_tr = WindowedLOBDataset(trx, tr_y, window=args.window, horizons=HORIZONS)
-    ds_v = WindowedLOBDataset(vx, v_y, window=args.window, horizons=HORIZONS)
-    ds_te = WindowedLOBDataset(tex, te_y, window=args.window, horizons=HORIZONS)
+    ds_tr = MultiStreamLOBDataset(tr_xs, tr_ys, window=args.window, horizons=HORIZONS)
+    ds_v = MultiStreamLOBDataset(va_xs, va_ys, window=args.window, horizons=HORIZONS)
+    ds_te = MultiStreamLOBDataset(te_xs, te_ys, window=args.window, horizons=HORIZONS)
     dl_tr = DataLoader(ds_tr, batch_size=args.batch_size, shuffle=True, drop_last=True)
     dl_v = DataLoader(ds_v, batch_size=1024)
     dl_te = DataLoader(ds_te, batch_size=1024)
@@ -123,7 +129,9 @@ def main() -> None:
     ).to(dev)
     n_params = param_count(model)
 
-    weights = torch.stack([class_weights(tr_y[k]) for k in HORIZONS]).to(dev)
+    weights = torch.stack(
+        [class_weights(ds_tr.all_labels(i)) for i in range(len(HORIZONS))]
+    ).to(dev)
     losses = [nn.CrossEntropyLoss(weight=weights[i]) for i in range(len(HORIZONS))]
 
     opt = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
@@ -186,6 +194,7 @@ def main() -> None:
         "seed": args.seed, "steps": step, "elapsed_s": round(time.time() - t0, 1),
         "config": vars(args), "val": final_val, "test": test,
         "train_windows": len(ds_tr), "val_windows": len(ds_v), "test_windows": len(ds_te),
+        "train_segments": len(tr_segments), "test_segments": len(te_segments),
     }
     (out_dir / "summary.json").write_text(json.dumps(summary, indent=2))
     metrics_f.close()

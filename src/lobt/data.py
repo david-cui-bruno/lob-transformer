@@ -68,6 +68,20 @@ def _split_features_labels(mat: np.ndarray) -> tuple[np.ndarray, dict[int, np.nd
     return x, labels
 
 
+def detect_segments(x: np.ndarray, thresh: float = 0.2) -> list[tuple[int, int]]:
+    """Split a concatenated multi-stock stream into per-stock segments.
+
+    FI-2010 files concatenate 5 stocks back-to-back with no marker. Segment
+    boundaries show up as large relative jumps in the best-ask price (the
+    stocks trade at very different price scales). Verified against the known
+    structure: train -> 5 segments, each test day -> 5 segments.
+    """
+    a = x[:, 0].astype(np.float64)
+    jumps = np.where(np.abs(np.diff(a)) / a[:-1] > thresh)[0]
+    edges = [0, *(jumps + 1), len(x)]
+    return [(edges[i], edges[i + 1]) for i in range(len(edges) - 1)]
+
+
 def load_fi2010(
     data_dir: str | Path,
 ) -> tuple[np.ndarray, dict[int, np.ndarray], np.ndarray, dict[int, np.ndarray]]:
@@ -86,6 +100,31 @@ def load_fi2010(
     test_x = np.concatenate(xs, axis=0)
     test_y = {k: np.concatenate([y[k] for y in ys], axis=0) for k in HORIZONS}
     return train_x, train_y, test_x, test_y
+
+
+def train_val_split_segmented(
+    x: np.ndarray,
+    y: dict[int, np.ndarray],
+    segments: list[tuple[int, int]],
+    val_frac: float = 0.1,
+) -> tuple[
+    list[np.ndarray],
+    list[dict[int, np.ndarray]],
+    list[np.ndarray],
+    list[dict[int, np.ndarray]],
+]:
+    """Chronological split within EACH segment: the tail val_frac of every
+    stock's stream is validation. Returns per-segment lists so windows can
+    never cross a stock boundary or the train/val boundary.
+    """
+    tr_xs, tr_ys, va_xs, va_ys = [], [], [], []
+    for s, e in segments:
+        cut = s + int((e - s) * (1.0 - val_frac))
+        tr_xs.append(x[s:cut])
+        tr_ys.append({k: v[s:cut] for k, v in y.items()})
+        va_xs.append(x[cut:e])
+        va_ys.append({k: v[cut:e] for k, v in y.items()})
+    return tr_xs, tr_ys, va_xs, va_ys
 
 
 def train_val_split(
