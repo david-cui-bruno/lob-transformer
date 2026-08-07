@@ -9,7 +9,7 @@ final model from `results/*/summary.json`. Headline horizon k=10.
 |---|---|---|
 | logistic (flattened window) | 60k | 0.267 |
 | MLP 256-128 (flattened window) | 1.06M | 0.360 |
-| transformer (3 seeds) | 210k | **0.607 ± 0.011** |
+| transformer (3 seeds) | 210k | **0.607 ± 0.013** |
 
 The transformer beats the MLP by +25 F1 points with 5x fewer parameters. The
 gap is architectural: the MLP sees the same 100x40 window but must learn

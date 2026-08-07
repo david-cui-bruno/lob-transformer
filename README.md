@@ -15,7 +15,7 @@ engine produces.
 |---|---|---|
 | logistic regression | 60k | 0.267 |
 | MLP 256-128 | 1.06M | 0.360 |
-| **transformer** | **210k** | **0.607 ± 0.011** (3 seeds) |
+| **transformer** | **210k** | **0.607 ± 0.013** (3 seeds) |
 
 +25 F1 over the MLP with 5x fewer parameters. Ablations show the gain is the
 sequence treatment, not capacity (2 layers ≈ 4 layers) or context length
