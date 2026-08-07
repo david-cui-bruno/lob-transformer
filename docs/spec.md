@@ -20,7 +20,7 @@ Resume-bullet shape this must produce (numbers TBD by real runs):
 - **Input**: the last `T=100` LOB snapshots, each the top 10 levels per side:
   (price, size) for bids and asks = 40 features per snapshot.
 - **Target**: direction of the smoothed mid-price change over horizon
-  `k ∈ {10, 20, 50, 100}` events: down / stationary / up (3 classes).
+  `k ∈ {10, 20, 30, 50, 100}` events: down / stationary / up (3 classes).
   Smoothing and thresholding follow the FI-2010 label definition (Ntakaris et
   al. 2018): compare the mean of the next k mids `m+(t)` to the mean of the
   previous k mids `m-(t)`; label by relative change vs threshold α.
