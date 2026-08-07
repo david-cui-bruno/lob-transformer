@@ -1,0 +1,139 @@
+/Users/davidcui824/lob-transformer/src/lobt/models.py:88: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.encoder = nn.TransformerEncoder(layer, num_layers=n_layers)
+JCODE_PROGRESS {"message": "step 1000 val k10 F1 0.3789", "current": 1000, "total": 13395}
+JCODE_PROGRESS {"message": "step 2000 val k10 F1 0.4413", "current": 2000, "total": 13395}
+JCODE_PROGRESS {"message": "step 3000 val k10 F1 0.4532", "current": 3000, "total": 13395}
+JCODE_PROGRESS {"message": "step 4000 val k10 F1 0.4939", "current": 4000, "total": 13395}
+JCODE_PROGRESS {"message": "step 5000 val k10 F1 0.5286", "current": 5000, "total": 13395}
+JCODE_PROGRESS {"message": "step 6000 val k10 F1 0.5668", "current": 6000, "total": 13395}
+JCODE_PROGRESS {"message": "step 7000 val k10 F1 0.5655", "current": 7000, "total": 13395}
+JCODE_PROGRESS {"message": "step 8000 val k10 F1 0.5804", "current": 8000, "total": 13395}
+JCODE_PROGRESS {"message": "step 9000 val k10 F1 0.5886", "current": 9000, "total": 13395}
+JCODE_PROGRESS {"message": "step 10000 val k10 F1 0.5848", "current": 10000, "total": 13395}
+JCODE_PROGRESS {"message": "step 11000 val k10 F1 0.5943", "current": 11000, "total": 13395}
+JCODE_PROGRESS {"message": "step 12000 val k10 F1 0.5963", "current": 12000, "total": 13395}
+JCODE_PROGRESS {"message": "step 13000 val k10 F1 0.5955", "current": 13000, "total": 13395}
+{
+  "k10": 0.6185,
+  "k20": 0.5715,
+  "k30": 0.6075,
+  "k50": 0.6221,
+  "k100": 0.6071
+}
+done: 210063 params, best val k10 F1 0.5963, test k10 F1 0.6185
+/Users/davidcui824/lob-transformer/src/lobt/models.py:88: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.encoder = nn.TransformerEncoder(layer, num_layers=n_layers)
+JCODE_PROGRESS {"message": "step 1000 val k10 F1 0.2955", "current": 1000, "total": 13395}
+JCODE_PROGRESS {"message": "step 2000 val k10 F1 0.4362", "current": 2000, "total": 13395}
+JCODE_PROGRESS {"message": "step 3000 val k10 F1 0.4737", "current": 3000, "total": 13395}
+JCODE_PROGRESS {"message": "step 4000 val k10 F1 0.4871", "current": 4000, "total": 13395}
+JCODE_PROGRESS {"message": "step 5000 val k10 F1 0.5221", "current": 5000, "total": 13395}
+JCODE_PROGRESS {"message": "step 6000 val k10 F1 0.5266", "current": 6000, "total": 13395}
+JCODE_PROGRESS {"message": "step 7000 val k10 F1 0.5552", "current": 7000, "total": 13395}
+JCODE_PROGRESS {"message": "step 8000 val k10 F1 0.5608", "current": 8000, "total": 13395}
+JCODE_PROGRESS {"message": "step 9000 val k10 F1 0.5565", "current": 9000, "total": 13395}
+JCODE_PROGRESS {"message": "step 10000 val k10 F1 0.5711", "current": 10000, "total": 13395}
+JCODE_PROGRESS {"message": "step 11000 val k10 F1 0.5780", "current": 11000, "total": 13395}
+JCODE_PROGRESS {"message": "step 12000 val k10 F1 0.5791", "current": 12000, "total": 13395}
+JCODE_PROGRESS {"message": "step 13000 val k10 F1 0.5792", "current": 13000, "total": 13395}
+{
+  "k10": 0.5922,
+  "k20": 0.5515,
+  "k30": 0.5879,
+  "k50": 0.6161,
+  "k100": 0.5994
+}
+done: 210063 params, best val k10 F1 0.5792, test k10 F1 0.5922
+/Users/davidcui824/lob-transformer/src/lobt/models.py:88: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.encoder = nn.TransformerEncoder(layer, num_layers=n_layers)
+JCODE_PROGRESS {"message": "step 1000 val k10 F1 0.4921", "current": 1000, "total": 13425}
+JCODE_PROGRESS {"message": "step 2000 val k10 F1 0.4957", "current": 2000, "total": 13425}
+JCODE_PROGRESS {"message": "step 3000 val k10 F1 0.5281", "current": 3000, "total": 13425}
+JCODE_PROGRESS {"message": "step 4000 val k10 F1 0.5559", "current": 4000, "total": 13425}
+JCODE_PROGRESS {"message": "step 5000 val k10 F1 0.5611", "current": 5000, "total": 13425}
+JCODE_PROGRESS {"message": "step 6000 val k10 F1 0.5591", "current": 6000, "total": 13425}
+JCODE_PROGRESS {"message": "step 7000 val k10 F1 0.5780", "current": 7000, "total": 13425}
+JCODE_PROGRESS {"message": "step 8000 val k10 F1 0.5884", "current": 8000, "total": 13425}
+JCODE_PROGRESS {"message": "step 9000 val k10 F1 0.5929", "current": 9000, "total": 13425}
+JCODE_PROGRESS {"message": "step 10000 val k10 F1 0.5896", "current": 10000, "total": 13425}
+JCODE_PROGRESS {"message": "step 11000 val k10 F1 0.5967", "current": 11000, "total": 13425}
+JCODE_PROGRESS {"message": "step 12000 val k10 F1 0.5956", "current": 12000, "total": 13425}
+JCODE_PROGRESS {"message": "step 13000 val k10 F1 0.5977", "current": 13000, "total": 13425}
+{
+  "k10": 0.6236,
+  "k20": 0.5749,
+  "k30": 0.6169,
+  "k50": 0.6326,
+  "k100": 0.6107
+}
+done: 204303 params, best val k10 F1 0.5977, test k10 F1 0.6236
+/Users/davidcui824/lob-transformer/src/lobt/models.py:88: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.encoder = nn.TransformerEncoder(layer, num_layers=n_layers)
+JCODE_PROGRESS {"message": "step 1000 val k10 F1 0.4030", "current": 1000, "total": 13410}
+JCODE_PROGRESS {"message": "step 2000 val k10 F1 0.4921", "current": 2000, "total": 13410}
+JCODE_PROGRESS {"message": "step 3000 val k10 F1 0.5405", "current": 3000, "total": 13410}
+JCODE_PROGRESS {"message": "step 4000 val k10 F1 0.5444", "current": 4000, "total": 13410}
+JCODE_PROGRESS {"message": "step 5000 val k10 F1 0.5509", "current": 5000, "total": 13410}
+JCODE_PROGRESS {"message": "step 6000 val k10 F1 0.5513", "current": 6000, "total": 13410}
+JCODE_PROGRESS {"message": "step 7000 val k10 F1 0.5758", "current": 7000, "total": 13410}
+JCODE_PROGRESS {"message": "step 8000 val k10 F1 0.5771", "current": 8000, "total": 13410}
+JCODE_PROGRESS {"message": "step 9000 val k10 F1 0.5685", "current": 9000, "total": 13410}
+JCODE_PROGRESS {"message": "step 10000 val k10 F1 0.5774", "current": 10000, "total": 13410}
+JCODE_PROGRESS {"message": "step 11000 val k10 F1 0.5831", "current": 11000, "total": 13410}
+JCODE_PROGRESS {"message": "step 12000 val k10 F1 0.5811", "current": 12000, "total": 13410}
+JCODE_PROGRESS {"message": "step 13000 val k10 F1 0.5813", "current": 13000, "total": 13410}
+{
+  "k10": 0.6034,
+  "k20": 0.5645,
+  "k30": 0.6015,
+  "k50": 0.6156,
+  "k100": 0.5685
+}
+done: 206863 params, best val k10 F1 0.5831, test k10 F1 0.6034
+/Users/davidcui824/lob-transformer/src/lobt/models.py:88: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.encoder = nn.TransformerEncoder(layer, num_layers=n_layers)
+JCODE_PROGRESS {"message": "step 1000 val k10 F1 0.3438", "current": 1000, "total": 13395}
+JCODE_PROGRESS {"message": "step 2000 val k10 F1 0.3978", "current": 2000, "total": 13395}
+JCODE_PROGRESS {"message": "step 3000 val k10 F1 0.4418", "current": 3000, "total": 13395}
+JCODE_PROGRESS {"message": "step 4000 val k10 F1 0.4590", "current": 4000, "total": 13395}
+JCODE_PROGRESS {"message": "step 5000 val k10 F1 0.4745", "current": 5000, "total": 13395}
+JCODE_PROGRESS {"message": "step 6000 val k10 F1 0.5348", "current": 6000, "total": 13395}
+JCODE_PROGRESS {"message": "step 7000 val k10 F1 0.5553", "current": 7000, "total": 13395}
+JCODE_PROGRESS {"message": "step 8000 val k10 F1 0.5677", "current": 8000, "total": 13395}
+JCODE_PROGRESS {"message": "step 9000 val k10 F1 0.5731", "current": 9000, "total": 13395}
+JCODE_PROGRESS {"message": "step 10000 val k10 F1 0.5728", "current": 10000, "total": 13395}
+JCODE_PROGRESS {"message": "step 11000 val k10 F1 0.5802", "current": 11000, "total": 13395}
+JCODE_PROGRESS {"message": "step 12000 val k10 F1 0.5807", "current": 12000, "total": 13395}
+JCODE_PROGRESS {"message": "step 13000 val k10 F1 0.5799", "current": 13000, "total": 13395}
+{
+  "k10": 0.6116,
+  "k20": 0.5629,
+  "k30": 0.5974,
+  "k50": 0.6158,
+  "k100": 0.5935
+}
+done: 210063 params, best val k10 F1 0.5807, test k10 F1 0.6116
+/Users/davidcui824/lob-transformer/src/lobt/models.py:88: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.encoder = nn.TransformerEncoder(layer, num_layers=n_layers)
+JCODE_PROGRESS {"message": "step 1000 val k10 F1 0.3815", "current": 1000, "total": 13395}
+JCODE_PROGRESS {"message": "step 2000 val k10 F1 0.4752", "current": 2000, "total": 13395}
+JCODE_PROGRESS {"message": "step 3000 val k10 F1 0.5035", "current": 3000, "total": 13395}
+JCODE_PROGRESS {"message": "step 4000 val k10 F1 0.5485", "current": 4000, "total": 13395}
+JCODE_PROGRESS {"message": "step 5000 val k10 F1 0.5561", "current": 5000, "total": 13395}
+JCODE_PROGRESS {"message": "step 6000 val k10 F1 0.5485", "current": 6000, "total": 13395}
+JCODE_PROGRESS {"message": "step 7000 val k10 F1 0.5606", "current": 7000, "total": 13395}
+JCODE_PROGRESS {"message": "step 8000 val k10 F1 0.5591", "current": 8000, "total": 13395}
+JCODE_PROGRESS {"message": "step 9000 val k10 F1 0.5741", "current": 9000, "total": 13395}
+JCODE_PROGRESS {"message": "step 10000 val k10 F1 0.5734", "current": 10000, "total": 13395}
+JCODE_PROGRESS {"message": "step 11000 val k10 F1 0.5769", "current": 11000, "total": 13395}
+JCODE_PROGRESS {"message": "step 12000 val k10 F1 0.5805", "current": 12000, "total": 13395}
+JCODE_PROGRESS {"message": "step 13000 val k10 F1 0.5775", "current": 13000, "total": 13395}
+{
+  "k10": 0.6068,
+  "k20": 0.5617,
+  "k30": 0.5953,
+  "k50": 0.5993,
+  "k100": 0.5839
+}
+done: 110095 params, best val k10 F1 0.5805, test k10 F1 0.6068
+ALL_RUNS_DONE
