@@ -1,0 +1,22 @@
+[project]
+name = "lobt"
+version = "0.1.0"
+description = "Transformer for short-horizon mid-price direction prediction on limit order book data (FI-2010)"
+requires-python = ">=3.11"
+dependencies = [
+    "torch>=2.2",
+    "numpy>=1.26",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

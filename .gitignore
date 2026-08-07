@@ -1,0 +1,20 @@
+# Data (large downloads, never committed)
+data/
+*.npy
+*.npz
+*.zip
+*.7z
+
+# Checkpoints and run scratch
+checkpoints/
+runs/
+*.pt
+
+# Python
+__pycache__/
+*.egg-info/
+.venv/
+.pytest_cache/
+
+# OS
+.DS_Store
