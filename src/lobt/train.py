@@ -73,7 +73,8 @@ def evaluate(model, loader, dev) -> dict:
 
 def main() -> None:
     p = argparse.ArgumentParser()
-    p.add_argument("--model", required=True, choices=["logistic", "mlp", "transformer"])
+    p.add_argument("--model", required=True,
+                   choices=["logistic", "mlp", "transformer", "convtransformer"])
     p.add_argument("--data-dir", default="data")
     p.add_argument("--out", required=True)
     p.add_argument("--window", type=int, default=100)
@@ -125,7 +126,7 @@ def main() -> None:
         args.model, args.window, trx.shape[1], len(HORIZONS),
         **({"d_model": args.d_model, "n_layers": args.n_layers,
             "n_heads": args.n_heads, "d_ff": args.d_ff}
-           if args.model == "transformer" else {}),
+           if args.model in ("transformer", "convtransformer") else {}),
     ).to(dev)
     n_params = param_count(model)
 

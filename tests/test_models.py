@@ -16,10 +16,18 @@ from lobt.train import macro_f1
 class TestShapes:
     def test_all_models_output_shape(self):
         x = torch.randn(4, 100, 40)
-        for name in ["logistic", "mlp", "transformer"]:
+        for name in ["logistic", "mlp", "transformer", "convtransformer"]:
             m = build_model(name, window=100, n_features=40, n_horizons=5)
             out = m(x)
             assert out.shape == (4, 5, 3), name
+
+    def test_conv_stem_collapses_levels(self):
+        from lobt.models import ConvStem
+
+        stem = ConvStem(channels=16)
+        h = stem(torch.randn(2, 100, 40))
+        assert h.shape[0] == 2 and h.shape[2] == 16
+        assert 90 <= h.shape[1] <= 108  # temporal convs shift length slightly
 
     def test_transformer_param_budget(self):
         m = LOBTransformer(window=100, n_features=40, n_horizons=5)
