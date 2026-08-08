@@ -17,11 +17,11 @@ engine produces.
 | MLP 256-128 | 1.06M | - | 0.360 |
 | transformer | 210k | 15 ep | 0.607 ± 0.013 (3 seeds) |
 | transformer | 210k | 60 ep | 0.649 ± 0.007 (3 seeds) |
-| **conv-stem transformer** | **247k** | **60 ep** | **0.703 ± 0.015** (3 seeds) |
+| **conv-stem transformer** | **247k** | **60 ep** | **0.702 ± 0.015** (3 seeds) |
 
 The v2 model adds a DeepLOB-style convolutional stem (pair price/size, pair
 bid/ask, fuse levels) in front of the same encoder. Under a **fair 60-epoch
-budget for both architectures**, the stem is worth +5.4 F1 (0.703 vs 0.649,
+budget for both architectures**, the stem is worth +5.4 F1 (0.702 vs 0.649,
 seed ranges non-overlapping: 0.685-0.712 vs 0.643-0.656). Training the plain
 transformer 4x longer only bought +4.2 F1, so architecture and budget
 contribute about equally to the total gain over the original 0.607. Full
@@ -55,18 +55,20 @@ run on Apple-Silicon MPS.
 
 ```bash
 python -m venv .venv && .venv/bin/pip install -e ".[dev]"
-.venv/bin/python -m pytest            # 33 tests
+.venv/bin/python -m pytest            # 34 tests
 # put FI-2010 DecPre files in data/ (see src/lobt/data.py header)
 ./scripts/run_all.sh                  # baselines + transformer seed 0
 ./scripts/run_rest.sh                 # seeds 1-2 + ablations
 .venv/bin/python scripts/report.py    # results table
 ```
 
-Every number in the docs comes from a committed `results/*/summary.json`.
+Every number in the docs comes from a committed `results/*/summary.json`;
+`scripts/verify_claims.py` re-derives all 16 published claims from those
+artifacts and fails on any mismatch.
 
 ## Verification
 
-- 33 unit tests: label math (vs naive reference), windowing, split hygiene,
+- 34 unit tests: label math (vs naive reference), windowing, split hygiene,
   segment handling, model shapes, and a train-loop overfit check.
 - `scripts/validate_labels.py`: dataset labels empirically match future
   mid-price moves (UP +7.6e-4, DOWN -7.2e-4, STAT ~0).

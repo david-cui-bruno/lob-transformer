@@ -53,7 +53,7 @@ LeakyReLU throughout. 247k params vs 210k. Both architectures trained to a
 | model (60 ep) | s0 | s1 | s2 | mean ± sd |
 |---|---|---|---|---|
 | transformer | 0.643 | 0.656 | 0.647 | 0.649 ± 0.007 |
-| conv-stem transformer | 0.712 | 0.685 | 0.711 | **0.703 ± 0.015** |
+| conv-stem transformer | 0.712 | 0.685 | 0.711 | **0.702 ± 0.015** |
 
 Two things had to be separated:
 
