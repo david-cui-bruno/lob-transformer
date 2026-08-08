@@ -18,3 +18,8 @@ __pycache__/
 
 # OS
 .DS_Store
+
+# Run logs and watcher scratch (results/*/summary.json is the record)
+runs_*.log
+chain_*.log
+.watch_*

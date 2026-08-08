@@ -1,6 +1,26 @@
 #!/bin/bash
-# Fair-budget control + conv seeds, sequential to avoid MPS contention
-.venv/bin/python -m lobt.train --model transformer --out results/transformer_long_s0 --epochs 60 --patience 10 --seed 0
-.venv/bin/python -m lobt.train --model convtransformer --out results/convtransformer_long_s1 --epochs 60 --patience 10 --seed 1
-.venv/bin/python -m lobt.train --model convtransformer --out results/convtransformer_long_s2 --epochs 60 --patience 10 --seed 2
-echo "CAMPAIGN DONE"
+# Resumable campaign: skips any run whose summary.json already exists.
+# Safe to re-run after a crash/sleep. Runs sequentially (single MPS device).
+cd /Users/davidcui824/lob-transformer
+
+run() {
+  local model=$1 seed=$2 out=$3
+  if [ -f "results/$out/summary.json" ]; then
+    echo "SKIP $out (already complete)"
+    return
+  fi
+  echo "START $out"
+  rm -rf "results/$out"
+  .venv/bin/python -m lobt.train --model "$model" --out "results/$out" \
+    --epochs 60 --patience 10 --seed "$seed" > "runs_$out.log" 2>&1
+  if [ -f "results/$out/summary.json" ]; then
+    echo "DONE $out"
+  else
+    echo "FAILED $out"
+  fi
+}
+
+run convtransformer 2 convtransformer_long_s2
+run transformer 1 transformer_long_s1
+run transformer 2 transformer_long_s2
+echo "CAMPAIGN COMPLETE"
