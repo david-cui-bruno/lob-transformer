@@ -42,6 +42,38 @@ so model selection on val did not overfit.
    data scale; the win over baselines is not parameter count (the MLP has 5x
    more).
 
+## v2: conv-stem transformer, with a fair-budget control
+
+Adding a DeepLOB-style convolutional stem (Zhang et al. 2019) in front of the
+same encoder: (1,2) convs pair price with size per level, a second stage pairs
+bid with ask, a (1,10) conv fuses the 10 levels, with temporal (4,1) convs and
+LeakyReLU throughout. 247k params vs 210k. Both architectures trained to a
+60-epoch budget with patience 10, 3 seeds each:
+
+| model (60 ep) | s0 | s1 | s2 | mean ± sd |
+|---|---|---|---|---|
+| transformer | 0.643 | 0.656 | 0.647 | 0.649 ± 0.007 |
+| conv-stem transformer | 0.712 | 0.685 | 0.711 | **0.703 ± 0.015** |
+
+Two things had to be separated:
+
+1. **Budget matters.** The original 15-epoch transformer (0.607) was
+   undertrained: the same model at 60 epochs reaches 0.649. Our first
+   conv-stem run at 13k steps looked *worse* than the baseline (0.393)
+   for the same reason; at 54k steps it converged to 0.712.
+2. **After controlling for budget, the stem is real.** +5.4 F1 at equal
+   epochs, and the seed ranges do not overlap (0.685-0.712 vs 0.643-0.656).
+   The stem's inductive bias (price-size pairing, bid-ask pairing, level
+   fusion) does work that attention over raw 40-dim snapshots does not
+   learn at this scale.
+
+At k=100 the gap widens: conv 0.790/0.748/0.793 vs transformer ~0.663. The
+stem helps most where the label depends on broader book structure.
+
+Gap to published DeepLOB (~0.83 at k=10) is now ~0.12, down from ~0.22,
+still attributable to their ~100-epoch CNN+LSTM budget and our stricter
+segment hygiene (boundary windows discarded).
+
 ## The leakage bug worth knowing about
 
 FI-2010's distribution files concatenate **5 stocks** back to back with no
@@ -59,14 +91,16 @@ stock, and no window can cross a stock boundary by construction
 
 ## Honest comparison to published work
 
-DeepLOB (Zhang et al. 2019) reports ~0.83 F1 at k=10 on this benchmark. We
-get 0.61. Differences: they train a CNN+LSTM for ~100 epochs with heavier
-feature extraction; our budget is 15 epochs / ~11 minutes on Apple-Silicon
-MPS, and our per-segment hygiene discards boundary windows. We did not
-attempt to close this gap; the project's aim is a clean, verified pipeline
-with defensible baselines and ablations, not SOTA. The remaining gap is a
-known cost of budget and architecture, and closing it is future work
-(CNN feature stem, longer training, learning-rate sweeps).
+DeepLOB (Zhang et al. 2019) reports ~0.83 F1 at k=10 on this benchmark. Our
+v1 transformer got 0.61 at 15 epochs; the v2 conv-stem model at 60 epochs
+gets 0.70 (both trained on Apple-Silicon MPS, minutes to ~1 hour per run).
+The v2 campaign closed roughly half the gap by doing exactly what this
+section originally called future work: a CNN feature stem plus longer
+training. The remaining ~0.12 is attributable to their ~100-epoch CNN+LSTM
+budget, heavier feature extraction, and our stricter per-segment hygiene
+(boundary windows discarded). We have not attempted to tune past this point;
+the project's aim is a clean, verified pipeline with controlled comparisons,
+not SOTA.
 
 ## Limitations
 

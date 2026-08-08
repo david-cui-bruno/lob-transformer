@@ -11,16 +11,21 @@ engine produces.
 
 ## Results (FI-2010, test days 8-10, macro F1 at horizon k=10)
 
-| model | params | test F1 k10 |
-|---|---|---|
-| logistic regression | 60k | 0.267 |
-| MLP 256-128 | 1.06M | 0.360 |
-| **transformer** | **210k** | **0.607 ± 0.013** (3 seeds) |
+| model | params | budget | test F1 k10 |
+|---|---|---|---|
+| logistic regression | 60k | - | 0.267 |
+| MLP 256-128 | 1.06M | - | 0.360 |
+| transformer | 210k | 15 ep | 0.607 ± 0.013 (3 seeds) |
+| transformer | 210k | 60 ep | 0.649 ± 0.007 (3 seeds) |
+| **conv-stem transformer** | **247k** | **60 ep** | **0.703 ± 0.015** (3 seeds) |
 
-+25 F1 over the MLP with 5x fewer parameters. Ablations show the gain is the
-sequence treatment, not capacity (2 layers ≈ 4 layers) or context length
-(window 10 ≈ window 100). Full analysis, including an honest gap statement
-vs published DeepLOB numbers, in [docs/findings.md](docs/findings.md).
+The v2 model adds a DeepLOB-style convolutional stem (pair price/size, pair
+bid/ask, fuse levels) in front of the same encoder. Under a **fair 60-epoch
+budget for both architectures**, the stem is worth +5.4 F1 (0.703 vs 0.649,
+seed ranges non-overlapping: 0.685-0.712 vs 0.643-0.656). Training the plain
+transformer 4x longer only bought +4.2 F1, so architecture and budget
+contribute about equally to the total gain over the original 0.607. Full
+analysis in [docs/findings.md](docs/findings.md).
 
 ## A leakage bug you'll hit if you do this naively
 
